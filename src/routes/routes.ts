@@ -48,7 +48,8 @@ import { CaController } from "../controllers/ca/ca.controller";
 import { CrtController } from "../controllers/crt/crt.controller";
 import { DhcpGroupController } from '../controllers/system/dhcp-group/dhcp-group.controller';
 import { DhcpController } from '../controllers/system/dhcp/dhcp.controller';
-
+import { HAProxyGroupController } from '../controllers/system/haproxy-group/haproxy-group.controller';
+import { HAProxyController } from '../controllers/system/haproxy/haproxy.controller';
 export class Routes extends RouteCollection {
 
     public routes(router: RouterParser): void {
@@ -190,6 +191,35 @@ export class Routes extends RouteCollection {
                                         router.get('/', DhcpController, 'show').name('fwclouds.firewalls.system.dhcp.show');
                                         router.put('/', DhcpController, 'update').name('fwclouds.firewalls.system.dhcp.update');
                                         router.delete('/', DhcpController, 'remove').name('fwclouds.firewalls.system.dhcp.delete');
+                                    });
+                                });
+
+                                router.prefix('/haproxyGroups', (router: RouterParser) => {
+                                    router.get('/', HAProxyGroupController, 'index').name('fwclouds.firewalls.system.haproxy.groups.index');
+                                    router.post('/', HAProxyGroupController, 'create').name('fwclouds.firewalls.system.haproxy.groups.store');
+                                    router.prefix(':haproxygroup(\\d+)', (router: RouterParser) => {
+                                        router.get('/', HAProxyGroupController, 'show').name('fwclouds.firewalls.system.haproxy.groups.show');
+                                        router.put('/', HAProxyGroupController, 'update').name('fwclouds.firewalls.system.haproxy.groups.update');
+                                        router.delete('/', HAProxyGroupController, 'remove').name('fwclouds.firewalls.system.haproxy.groups.delete');
+                                    });
+                                });
+
+                                router.prefix('/haproxyRules', (router: RouterParser) => {
+                                    router.prefix('/grid', (router: RouterParser) => {
+                                        router.prefix('/:set(\\d+)', (router: RouterParser) => {
+                                            router.get('/', HAProxyController, 'grid').name('fwclouds.firewalls.system.haproxy.grid');
+                                        });
+                                    });
+                                    router.get('/', HAProxyController, 'index').name('fwclouds.firewalls.system.haproxy.index');
+                                    router.post('/', HAProxyController, 'create').name('fwclouds.firewalls.system.haproxy.store');
+                                    router.post('/copy', HAProxyController, 'copy').name('fwclouds.firewalls.system.haproxy.copy');
+                                    router.put('/move', HAProxyController, 'move').name('fwclouds.firewalls.system.haproxy.move');
+                                    router.put('/bulkUpdate', HAProxyController, 'bulkUpdate').name('fwclouds.firewalls.system.haproxy.bulkUpdate');
+                                    router.delete('/bulkRemove', HAProxyController, 'bulkRemove').name('fwclouds.firewalls.system.haproxy.bulkRemove');
+                                    router.prefix('/:haproxy(\\d+)', (router: RouterParser) => {
+                                        router.get('/', HAProxyController, 'show').name('fwclouds.firewalls.system.haproxy.show');
+                                        router.put('/', HAProxyController, 'update').name('fwclouds.firewalls.system.haproxy.update');
+                                        router.delete('/', HAProxyController, 'remove').name('fwclouds.firewalls.system.haproxy.delete');
                                     });
                                 });
                             });

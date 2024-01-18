@@ -3,7 +3,7 @@ import { IPObj } from "../ipobj/IPObj";
 import { IPObjGroup } from "../ipobj/IPObjGroup";
 
 //TODO: Everything related to compilation is missing
-export type AvailableDestinations = 'regular_grid' | 'fixed_grid' | 'compiler';
+export type AvailableDestinations = 'regular_grid' | 'fixed_grid' | 'haproxy_grid' | 'compiler';
 
 export type ItemForGrid = {
     entityId: number;
@@ -29,6 +29,28 @@ export type DHCPRuleItemForCompiler = {
 
 export class DHCPUtils {
     public static async mapEntityData<T extends ItemForGrid | DHCPRuleItemForCompiler>(sql: SelectQueryBuilder<IPObj | IPObjGroup>, ItemsArrayMap: Map<number, T[]>): Promise<void> {
+        const data: T[] = await sql.getRawMany() as T[];
+
+        for (let i = 0; i < data.length; i++) {
+            const items: T[] = ItemsArrayMap.get(data[i].entityId);
+            items?.push(data[i]);
+        }
+
+        return;
+    }
+}
+
+export type HAProxyRuleItemForCompiler = {
+    entityId: number;
+    type: number;
+    address: string;
+    netmask: string;
+    range_start: string;
+    range_end: string;
+};
+
+export class HAProxyUtils {
+    public static async mapEntityData<T extends ItemForGrid | HAProxyRuleItemForCompiler>(sql: SelectQueryBuilder<IPObj | IPObjGroup>, ItemsArrayMap: Map<number, T[]>): Promise<void> {
         const data: T[] = await sql.getRawMany() as T[];
 
         for (let i = 0; i < data.length; i++) {
