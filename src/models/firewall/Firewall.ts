@@ -58,6 +58,8 @@ import { DHCPGroup } from "../system/dhcp/dhcp_g/dhcp_g.model";
 import { DHCPRule } from "../system/dhcp/dhcp_r/dhcp_r.model";
 import { KeepalivedGroup } from "../system/keepalived/keepalived_g/keepalived_g.model";
 import { KeepalivedRule } from "../system/keepalived/keepalived_r/keepalived_r.model";
+import { HAProxyGroup } from "../system/haproxy/haproxy_g/haproxy_g.model";
+import { HAProxyRule } from "../system/haproxy/haproxy_r/haproxy_r.model";
 
 const tableName: string = 'firewall';
 
@@ -227,6 +229,12 @@ export class Firewall extends Model {
 
 	@OneToMany(type => KeepalivedRule, keepalivedRule => keepalivedRule.firewall)
 	keepalivedRules: KeepalivedRule[];
+	
+	@OneToMany(type => HAProxyGroup, haproxyGroup => haproxyGroup.firewall)
+	haproxyGroups: HAProxyGroup[];
+
+	@OneToMany(type => HAProxyRule, haproxyRule => haproxyRule.firewall)
+	haproxyRules: HAProxyRule[];
 
 	public getTableName(): string {
 		return tableName;

@@ -50,6 +50,8 @@ import { DhcpGroupController } from '../controllers/system/dhcp-group/dhcp-group
 import { DhcpController } from '../controllers/system/dhcp/dhcp.controller';
 import { KeepalivedGroupController } from '../controllers/system/keepalived-group/keepalived-group.controller';
 import { KeepalivedController } from '../controllers/system/keepalived/keepalived.controller';
+import { HAProxyGroupController } from '../controllers/system/haproxy-group/haproxy-group.controller';
+import { HAProxyController } from '../controllers/system/haproxy/haproxy.controller';
 export class Routes extends RouteCollection {
 
     public routes(router: RouterParser): void {
@@ -222,7 +224,39 @@ export class Routes extends RouteCollection {
                                         router.delete('/', KeepalivedController, 'remove').name('fwclouds.firewalls.system.keepalived.delete');
                                     });
                                 });
+
+                                router.prefix('/haproxyGroups', (router: RouterParser) => {
+                                    router.get('/', HAProxyGroupController, 'index').name('fwclouds.firewalls.system.haproxy.groups.index');
+                                    router.post('/', HAProxyGroupController, 'create').name('fwclouds.firewalls.system.haproxy.groups.store');
+                                    router.prefix(':haproxygroup(\\d+)', (router: RouterParser) => {
+                                        router.get('/', HAProxyGroupController, 'show').name('fwclouds.firewalls.system.haproxy.groups.show');
+                                        router.put('/', HAProxyGroupController, 'update').name('fwclouds.firewalls.system.haproxy.groups.update');
+                                        router.delete('/', HAProxyGroupController, 'remove').name('fwclouds.firewalls.system.haproxy.groups.delete');
+                                    });
+                                });
+
+                                router.prefix('/haproxyRules', (router: RouterParser) => {
+                                    router.prefix('/grid', (router: RouterParser) => {
+                                        router.prefix('/:set(\\d+)', (router: RouterParser) => {
+                                            router.get('/', HAProxyController, 'grid').name('fwclouds.firewalls.system.haproxy.grid');
+                                        });
+                                    });
+                                    router.get('/', HAProxyController, 'index').name('fwclouds.firewalls.system.haproxy.index');
+                                    router.post('/', HAProxyController, 'create').name('fwclouds.firewalls.system.haproxy.store');
+                                    router.post('/copy', HAProxyController, 'copy').name('fwclouds.firewalls.system.haproxy.copy');
+                                    router.put('/move', HAProxyController, 'move').name('fwclouds.firewalls.system.haproxy.move');
+                                    router.put('/bulkUpdate', HAProxyController, 'bulkUpdate').name('fwclouds.firewalls.system.haproxy.bulkUpdate');
+                                    router.delete('/bulkRemove', HAProxyController, 'bulkRemove').name('fwclouds.firewalls.system.haproxy.bulkRemove');
+                                    router.prefix('/:haproxy(\\d+)', (router: RouterParser) => {
+                                        router.get('/', HAProxyController, 'show').name('fwclouds.firewalls.system.haproxy.show');
+                                        router.put('/', HAProxyController, 'update').name('fwclouds.firewalls.system.haproxy.update');
+                                        router.delete('/', HAProxyController, 'remove').name('fwclouds.firewalls.system.haproxy.delete');
+                                    });
+                                });
                             });
+
+
+
 
                             router.prefix('/routeGroups', (router: RouterParser) => {
                                 router.get('/', RouteGroupController, 'index').name('fwclouds.firewalls.routing.routeGroups.index');
@@ -311,5 +345,7 @@ export class Routes extends RouteCollection {
         router.prefix('/config', (router: RouterParser) => {
             router.get('/', FwCloudController, 'getConfig').name('config.get')
         })
+
+
     }
 }
