@@ -26,7 +26,7 @@ import { HAProxyRule } from "./haproxy_r.model";
 interface IFindManyHAProxyRPath {
     fwcloudId?: number;
     firewallId?: number;
-    dhcGroupId?: number;
+    haproxyGroupId?: number;
 }
 interface IFindOneHAProxyRPath extends IFindManyHAProxyRPath {
     id: number;
@@ -75,7 +75,7 @@ export class HAProxyRepository extends Repository<HAProxyRule> {
         let affectedHAProxys: HAProxyRule[] = await this.findManyInPath({
             fwcloudId: HAProxy_rs[0].firewall.fwCloudId,
             firewallId: HAProxy_rs[0].firewall.id,
-            dhcGroupId: HAProxy_rs[0].group?.id,
+            haproxyGroupId: HAProxy_rs[0].group?.id,
         });
 
         const destHAProxy: HAProxyRule = await this.findOneOrFail({
@@ -215,11 +215,11 @@ export class HAProxyRepository extends Repository<HAProxyRule> {
                 if (path.fwcloudId) {
                     qb.andWhere('fwcloud.id = :fwcloudId', { fwcloudId: path.fwcloudId });
                 }
-                if (path.dhcGroupId) {
-                    qb.andWhere('group.id = :dhcGroupId', { dhcGroupId: path.dhcGroupId });
+                if (path.haproxyGroupId) {
+                    qb.andWhere('group.id = :haproxyGroupId', { haproxyGroupId: path.haproxyGroupId });
                 }
                 if (path.id) {
-                    qb.andWhere('HAProxy.id = :id', { id: path.id });
+                    qb.andWhere('haproxy.id = :id', { id: path.id });
                 }
             },
         }, options)
@@ -268,10 +268,10 @@ export class HAProxyRepository extends Repository<HAProxyRule> {
     async getHAProxyRules(fwcloud: number, firewall: number, rules?: number[],rule_types?: number[]): Promise<HAProxyRule[]> {
         const query: SelectQueryBuilder<HAProxyRule> = this.createQueryBuilder('haproxy_r')
             .leftJoinAndSelect('haproxy_r.group', 'group')
-            .leftJoinAndSelect('haproxy_r.network', 'network')
-            .leftJoinAndSelect('haproxy_r.range', 'range')
-            .leftJoinAndSelect('haproxy_r.router', 'router')
-            .leftJoinAndSelect('haproxy_r.interface', 'interface')
+            .leftJoinAndSelect('haproxy_r.frontendIp', 'frontendIp')
+            .leftJoinAndSelect('haproxy_r.frontendPort', 'frontendPort')
+            .leftJoinAndSelect('haproxy_r.backendIp', 'backendIp')
+            .leftJoinAndSelect('haproxy_r.backendPort', 'backendPort')
             .innerJoin('haproxy_r.firewall', 'firewall')
             .innerJoin('firewall.fwCloud', 'fwCloud')
             .where('firewall.id = :firewallId', { firewallId: firewall })

@@ -19,7 +19,7 @@
     You should have received a copy of the GNU General Public License
     along with FWCloud.  If not, see <https://www.gnu.org/licenses/>.
 */
-import { IsBoolean, IsOptional, IsNumber, IsString, IsPositive, IsEnum, IsIn } from "class-validator";
+import { IsBoolean, IsOptional, IsNumber, IsString, IsPositive, IsEnum } from "class-validator";
 import { Offset } from "../../../../offset";
 
 export class HAProxyRuleCreateDto {
@@ -38,10 +38,6 @@ export class HAProxyRuleCreateDto {
     @IsString()
     @IsOptional()
     style: string;
-
-    @IsIn([1, 2])
-    @IsOptional()
-    rule_type?: number;
 
     @IsString()
     @IsOptional()

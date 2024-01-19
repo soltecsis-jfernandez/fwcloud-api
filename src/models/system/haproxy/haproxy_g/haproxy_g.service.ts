@@ -35,7 +35,7 @@ interface IFindOneHAProxyGPath extends IFindManyHAProxyGPath {
     id: number;
 }
 
-interface ICreateDHCGroup {
+interface ICreateHAProxyGroup {
     firewallId: number;
     name: string;
     comment?: string;
@@ -90,7 +90,7 @@ export class HAProxyGroupService extends Service {
     }
 
 
-    async create(data: ICreateDHCGroup): Promise<HAProxyGroup> {
+    async create(data: ICreateHAProxyGroup): Promise<HAProxyGroup> {
         const groupData: Partial<HAProxyGroup> = {
             name: data.name,
             firewall: await getRepository(Firewall).findOne(data.firewallId) as unknown as Firewall,
