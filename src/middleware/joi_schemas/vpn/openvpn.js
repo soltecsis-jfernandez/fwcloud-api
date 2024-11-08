@@ -42,14 +42,23 @@ schema.validate = req => {
 		
 		const validCiphers = [
 			'AES-256-GCM',
+			'aes-256-gcm',
 			'AES-128-GCM',
+			'aes-128-gcm',
 			'AES-256-CBC',
+			'aes-256-cbc',
 			'AES-128-CBC',
+			'aes-128-cbc',
 			'CHACHA20-POLY1305',
+			'chacha20-poly1305',
 			'BF-CBC',
+			'bf-cbc',
 			'CAMELLIA-256-CBC',
+			'camellia-256-cbc',
 			'CAMELLIA-128-CBC',
-			'DES-EDE3-CBC'
+			'camellia-128-cbc',
+			'DES-EDE3-CBC',
+			'des-ede3-cbc'
 		];
 		const cipherRegex = new RegExp(`^(${validCiphers.join('|')})(:(${validCiphers.join('|')}))*$`);
 
